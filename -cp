@@ -1,0 +1,16 @@
+{{if eq (len .Args) 4}}
+    {{$channel := (index .CmdArgs 0)}}
+	{{$who := (index .CmdArgs 1)}}
+    {{$msg:= (joinStr " " (slice .CmdArgs 2))}}
+    {{$publicChannel := 600366422648029242}}
+    {{$desc := (joinStr "" "Hi！ " ($who) " 你在" ($channel) "接到投诉。 " "")}}
+    {{$footer := (sdict "text" (joinStr "" "管理员：" (.User.Username) ))}}
+
+    {{$embed := cembed "title" "投诉提醒！" "description" ($desc) "color" 16763904  "footer" ($footer) "fields" (cslice (sdict "name" "投诉内容：" "value" ($msg))) "thumbnail" (sdict "url" "http://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/256/Warning-icon.png") }}
+
+    {{sendMessage $publicChannel $embed}}
+	{{sendMessage nil $embed}}
+
+{{else}}
+    命令格式 -cp <#channel-name> <@username> <message>
+{{end}}
