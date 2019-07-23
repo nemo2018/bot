@@ -1,16 +1,23 @@
 {{if eq (len .Args) 4}}
+{{/*塘规channel ID*/}}
+	{{$channelrule :=("<#600414647031431200>")}}
+{{/*投诉区Chanel ID	*/}}
+	{{$channelcomplain :=("<#601235823370829834>")}} 
     {{$channel := (index .CmdArgs 0)}}
 	{{$who := (index .CmdArgs 1)}}
-    {{$msg:= (joinStr " " (slice .CmdArgs 2))}}
+    {{$msg:= (joinStr "" "您被投诉违反【" ($channelrule) "】第 " (index .CmdArgs 2) " 条，已经截图取证。您可以在【" ($channelcomplain) "】申诉。")}}
+	{{/*交流区channel ID*/}}
     {{$publicChannel := 600366422648029242}}
-    {{$desc := (joinStr "" "Hi！ " ($who) " 你在" ($channel) "接到投诉。 " "")}}
-    {{$footer := (sdict "text" (joinStr "" "管理员：" (.User.Username) ))}}
+    {{$desc := (joinStr "" "Hi！ " ($who) " 您在" ($channel) "接到投诉。 " "")}}
+    {{$footer := (sdict "text" (joinStr "" "投诉人：" (.User.Username) ))}}
 
     {{$embed := cembed "title" "投诉提醒！" "description" ($desc) "color" 16763904  "footer" ($footer) "fields" (cslice (sdict "name" "投诉内容：" "value" ($msg))) "thumbnail" (sdict "url" "http://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/256/Warning-icon.png") }}
 
     {{sendMessage $publicChannel $embed}}
-	{{sendMessage nil $embed}}
+	{{$msg2:=(joinStr "" "Hi! " (.User.Username) "。 您针对" ($who) "在【" ($channel) "】违反塘规 " (index .CmdArgs 2) " 条的投诉已记录。 请不要忘记提交截屏证据哦。")}}
+	{{$embedNil := cembed "title" "投诉记录：" "description" ($msg2) "color" 4325120}}
+	{{sendMessage nil $embedNil}}
 
 {{else}}
-    命令格式 -cp <#channel-name> <@username> <message>
+    命令格式 -cp <#channel-name> <@username> <投诉违反了塘规哪几条，写数字即可>
 {{end}}
